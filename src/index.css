@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+	--font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+	--font-poppins: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+}
+
+
+:root {
+	--pink: #FF3B8E;
+	--blue: #121258;
+	--red: #FF0000;
+	--white: #fbffff;
+	--gray: #FFFFFF33;
+	--light-gray: #1617F51A;
+	--black: #0E1125;
+
+	--bg: var(--white);
+	--text: var(--black);
+	--muted: color-mix(in srgb, var(--text) 70%, transparent);
+	--surface: color-mix(in srgb, var(--blue) 6%, var(--bg));
+	--surface-2: color-mix(in srgb, var(--pink) 6%, var(--bg));
+	--border: var(--light-gray);
+	--ring: color-mix(in srgb, var(--blue) 70%, transparent);
+	--nav-bg: color-mix(in srgb, var(--black) 14%, var(--white));
+
+	--primary: var(--blue);
+	--on-primary: var(--white);
+	--accent: var(--pink);
+	--on-accent: var(--white);
+	--danger: var(--red);
+}
+
+html {
+	color-scheme: light;
+	background-color: var(--bg);
+	scroll-behavior: smooth;
+}
+
+body {
+	background-color: var(--bg);
+	color: var(--text);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth section entrance animations */
+section {
+	animation: fadeInUp 0.5s ease-out both;
+}
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(16px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
