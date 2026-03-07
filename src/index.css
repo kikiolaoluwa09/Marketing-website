@@ -59,3 +59,27 @@ section {
 		transform: translateY(0);
 	}
 }
+
+/* Mobile menu fade in animation */
+.animate-fadeIn {
+	animation: fadeIn 0.2s ease-out both;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+/* Hide scrollbar for horizontal scroll containers */
+.scrollbar-hide {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+	display: none;
+}

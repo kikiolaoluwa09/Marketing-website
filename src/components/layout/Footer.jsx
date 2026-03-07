@@ -5,8 +5,8 @@ function Footer() {
   return (
     <footer className="bg-gray-50 border-t border-gray-200">
       {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-24">
           
           {/* Left Section - Logo & Newsletter */}
           <div className="space-y-8">
@@ -24,18 +24,18 @@ function Footer() {
               <h3 className="text-yellow-500 font-semibold text-sm">
                 Stay connected*
               </h3>
-              <p className="text-gray-700 font-medium">
+              <p className="text-gray-700 font-medium text-sm sm:text-base">
                 Subscribe to our newsletter
               </p>
               
               {/* Email Input */}
-              <div className="flex gap-0 max-w-lg">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 max-w-lg">
                 <input
                   type="email"
                   placeholder="name@email.com"
-                  className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm"
+                  className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-lg sm:rounded-l-lg sm:rounded-r-none focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm"
                 />
-                <button className="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-r-lg transition-colors duration-200 text-sm">
+                <button className="px-6 sm:px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg sm:rounded-l-none sm:rounded-r-lg transition-colors duration-200 text-sm">
                   Subscribe
                 </button>
               </div>
@@ -50,7 +50,7 @@ function Footer() {
             </div>
 
             {/* Social Icons */}
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               <a 
                 href="#" 
                 className="w-12 h-12 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors duration-200"
@@ -97,9 +97,9 @@ function Footer() {
 
       {/* Bottom Bar */}
       <div className="border-t border-gray-200 bg-white">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-gray-600">
               <span>Copyright © CuraAI {new Date().getFullYear()}</span>
               <span className="hidden md:inline">|</span>
               <a href="#" className="hover:text-gray-900 transition-colors duration-200">Privacy Policy</a>

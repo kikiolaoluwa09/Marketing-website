@@ -59,8 +59,8 @@ const tiers = [
   {
     name: "Companion",
     icon: <UserIcon />,
-    monthlyPrice: "$0",
-    yearlyPrice: "$0",
+    monthlyPrice: "0 NGN",
+    yearlyPrice: "0 NGN",
     cadence: "Free forever",
     tagline: "Start with gentle daily guidance.",
     features: [
@@ -148,7 +148,7 @@ function Pricing() {
   const toggleFaq = (i) => setOpenFaq(openFaq === i ? null : i);
 
   return (
-    <div className="space-y-28 pb-8 pt-20">
+    <div className="space-y-16 pb-8 pt-20">
       
       <section className="px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
@@ -194,17 +194,19 @@ function Pricing() {
       </section>
 
       {/* PRICING CARDS */}
-      <section className="px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-3">
-          {tiers.map((tier) => (
-            <article
-              key={tier.name}
-              className={`relative flex flex-col rounded-3xl border bg-[color:var(--surface)] p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg ${
-                tier.highlight
-                  ? "border-[color:var(--primary)] ring-2 ring-[color:var(--primary)]"
-                  : "border-[color:var(--border)]"
-              }`}
-            >
+      <section className="lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          {/* Mobile: Horizontal Scroll with Peek | Desktop: Grid */}
+          <div className="flex gap-4 overflow-x-auto px-4 pb-4 snap-x snap-mandatory scrollbar-hide sm:px-6 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 lg:snap-none lg:gap-6">
+            {tiers.map((tier) => (
+              <article
+                key={tier.name}
+                className={`relative flex min-w-[80vw] flex-col rounded-3xl border bg-[color:var(--surface)] p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg snap-center sm:min-w-[65vw] lg:min-w-0 ${
+                  tier.highlight
+                    ? "border-[color:var(--primary)] ring-2 ring-[color:var(--primary)]"
+                    : "border-[color:var(--border)]"
+                }`}
+              >
               {tier.highlight && (
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[color:var(--primary)] px-4 py-1 text-xs font-semibold text-[color:var(--on-primary)]">
                   Popular
@@ -253,6 +255,7 @@ function Pricing() {
               </button>
             </article>
           ))}
+          </div>
         </div>
       </section>
 

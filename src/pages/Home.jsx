@@ -200,7 +200,7 @@ function Home() {
         </div>
 
         {/* Hero Image */}
-        <div className="mx-auto mt-16 max-w-5xl  flex justify-center gap-10     ">
+        <div className="mx-auto mt-16 max-w-5xl flex justify-center gap-10">
      
             <img
               src={heroImage}
@@ -211,7 +211,7 @@ function Home() {
             <img
               src={chatImage}
               alt="CuraAi chat interface"
-              className="h-[100%] w-auto rounded-2xl object-cover"
+              className="hidden md:block h-[100%] w-auto rounded-2xl object-cover"
             />
             
 
