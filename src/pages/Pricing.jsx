@@ -167,7 +167,7 @@ function Pricing() {
   };
 
   return (
-    <div className="relative space-y-16 pb-8 pt-20">
+    <div className="relative space-y-16 overflow-x-clip pb-8 pt-20">
       <div className="pointer-events-none absolute -left-20 top-24 h-72 w-72 rounded-full bg-[color:var(--accent)]/8 blur-3xl" />
       <div className="pointer-events-none absolute -right-28 top-[40rem] h-80 w-80 rounded-full bg-[color:var(--primary)]/8 blur-3xl" />
       
@@ -218,8 +218,9 @@ function Pricing() {
       <section className="lg:px-8">
         <div className="mx-auto max-w-6xl">
           {/* Mobile: Horizontal Scroll with Peek | Desktop: Grid */}
-          <div className="flex gap-4 overflow-x-auto px-4 pb-4 snap-x snap-mandatory scrollbar-hide sm:px-6 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 lg:snap-none lg:gap-6">
-            {tiers.map((tier, i) => (
+          <div className="flex gap-4 overflow-x-auto px-4 pb-4 pt-4 snap-x snap-mandatory scroll-px-4 scrollbar-hide sm:px-6 sm:scroll-px-6 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 lg:pt-0 lg:snap-none lg:gap-6">
+            {tiers.map((tier, i) => {
+              return (
               <motion.article
                 key={tier.name}
                 initial={{ opacity: 0, y: 20 }}
@@ -227,7 +228,7 @@ function Pricing() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.1, ease: "easeOut" }}
                 whileHover={{ y: -8, scale: 1.01 }}
-                className={`relative flex min-w-[80vw] flex-col rounded-3xl border bg-white/65 p-7 shadow-sm backdrop-blur-md snap-center sm:min-w-[65vw] lg:min-w-0 ${
+                className={`relative flex w-[84vw] max-w-[22rem] flex-none snap-start flex-col rounded-3xl border bg-white/65 p-7 shadow-sm backdrop-blur-md sm:w-[68vw] sm:max-w-[24rem] lg:w-auto lg:max-w-none ${
                   tier.highlight
                     ? "border-[color:var(--primary)] ring-2 ring-[color:var(--primary)]"
                     : "border-white/50"
@@ -285,7 +286,7 @@ function Pricing() {
                 {tier.cta}
               </motion.button>
             </motion.article>
-          ))}
+          );})}
           </div>
         </div>
       </section>

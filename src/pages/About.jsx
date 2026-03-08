@@ -204,7 +204,7 @@ const itemVariants = {
 
 function About() {
   return (
-    <div className="space-y-28 pb-8 pt-20">
+    <div className="relative space-y-28 overflow-x-clip pb-8 pt-20">
       <div className="pointer-events-none absolute -left-32 top-32 h-72 w-72 rounded-full bg-[color:var(--primary)]/8 blur-3xl" />
       <div className="pointer-events-none absolute -right-24 top-[48rem] h-80 w-80 rounded-full bg-[color:var(--accent)]/8 blur-3xl" />
 
@@ -239,7 +239,7 @@ function About() {
       {/* WHO WE ARE */}
       <section className="px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
-          <div className="flex  items-center gap-12 lg:flex-row">
+          <div className="flex flex-col items-center gap-12 lg:flex-row">
             <div className="flex-1 space-y-6 text-center">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--accent)]">
                 Who We Are
