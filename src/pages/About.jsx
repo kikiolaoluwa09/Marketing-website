@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import plansImage from "../assets/Plans.png";
 import chatScreenImage from "../assets/Chat screen (1).png";
 
@@ -183,30 +184,57 @@ const timeline = [
   },
 ];
 
+const sectionVariants = {
+  hidden: { opacity: 0, y: 24 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+};
+
 function About() {
   return (
     <div className="space-y-28 pb-8 pt-20">
+      <div className="pointer-events-none absolute -left-32 top-32 h-72 w-72 rounded-full bg-[color:var(--primary)]/8 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 top-[48rem] h-80 w-80 rounded-full bg-[color:var(--accent)]/8 blur-3xl" />
+
       {/* HERO */}
-      <section className="px-4 sm:px-6 lg:px-8">
+      <motion.section
+        className="px-4 sm:px-6 lg:px-8"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2  }}
+      >
         <div className="mx-auto max-w-6xl">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--accent)]">
+            <motion.p variants={itemVariants} className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--accent)]">
               About CuraAi
-            </p>
-            <h1 className="mt-4 text-balance text-4xl font-semibold leading-[1.1] tracking-tight text-[color:var(--text)] sm:text-5xl lg:text-6xl">
+            </motion.p>
+            <motion.h1 variants={itemVariants} className="mt-4 text-balance text-4xl font-semibold leading-[1.1] tracking-tight text-[color:var(--text)] sm:text-5xl lg:text-6xl">
               Built with the tenderness of an{" "}
               <span className="text-[color:var(--primary)]">
                 independent studio
               </span>
-            </h1>
-            <p className="mt-6 text-base leading-relaxed text-[color:var(--muted)] sm:text-lg">
+            </motion.h1>
+            <motion.p variants={itemVariants} className="mt-6 text-base leading-relaxed text-[color:var(--muted)] sm:text-lg">
               CuraAi is a product of Alash Studios. The Latin root
               &ldquo;Cura&rdquo; means to care &mdash; and that is not just our
               name, it is our product requirement.
-            </p>
+            </motion.p>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* WHO WE ARE */}
       <section className="px-4 sm:px-6 lg:px-8">
@@ -246,8 +274,17 @@ function About() {
       </section>
 
       {/* ACHIEVEMENTS */}
-      <section className="px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)] px-6 py-14 sm:px-12">
+      <motion.section
+        className="px-4 sm:px-6 lg:px-8"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+      >
+        <motion.div
+          whileHover={{ scale: 1.005 }}
+          className="mx-auto max-w-6xl rounded-[32px] border border-white/50 bg-white/60 px-6 py-14 shadow-sm backdrop-blur-md sm:px-12"
+        >
           <div className="text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--accent)]">
               Our Impact
@@ -257,19 +294,24 @@ function About() {
             </h2>
           </div>
           <div className="mt-12 grid grid-cols-2 gap-6 lg:grid-cols-4">
-            {achievements.map((a) => (
-              <div key={a.label} className="text-center">
+            {achievements.map((a, i) => (
+              <motion.div
+                key={a.label}
+                variants={itemVariants}
+                whileHover={{ y: -4, scale: 1.05 }}
+                className="text-center"
+              >
                 <p className="text-4xl font-semibold text-[color:var(--primary)]">
                   {a.value}
                 </p>
                 <p className="mt-2 text-sm font-medium text-[color:var(--muted)]">
                   {a.label}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       {/* OUR MISSION */}
       <section className="px-4 sm:px-6 lg:px-8">
@@ -300,7 +342,13 @@ function About() {
       </section>
 
       {/* VALUES */}
-      <section className="px-4 sm:px-6 lg:px-8">
+      <motion.section
+        className="px-4 sm:px-6 lg:px-8"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.15 }}
+      >
         <div className="mx-auto max-w-6xl">
           <div className="text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--accent)]">
@@ -311,28 +359,39 @@ function About() {
             </h2>
           </div>
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {values.map((v) => (
-              <article
+            {values.map((v, i) => (
+              <motion.article
                 key={v.title}
-                className="group rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-7 transition hover:-translate-y-1 hover:shadow-lg"
+                variants={itemVariants}
+                whileHover={{ y: -6, scale: 1.01 }}
+                className="group rounded-3xl border border-white/55 bg-white/65 p-7 shadow-sm backdrop-blur-md"
               >
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--surface-2)] text-[color:var(--primary)] transition group-hover:bg-[color:var(--primary)] group-hover:text-[color:var(--on-primary)]">
+                <motion.div
+                  whileHover={{ rotate: 10, scale: 1.1 }}
+                  className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--surface-2)] text-[color:var(--primary)] transition group-hover:bg-[color:var(--primary)] group-hover:text-[color:var(--on-primary)]"
+                >
                   {v.icon}
-                </div>
+                </motion.div>
                 <h3 className="text-lg font-semibold tracking-tight text-[color:var(--text)]">
                   {v.title}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">
                   {v.description}
                 </p>
-              </article>
+              </motion.article>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* TIMELINE */}
-      <section className="px-4 sm:px-6 lg:px-8">
+      <motion.section
+        className="px-4 sm:px-6 lg:px-8"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="mx-auto max-w-3xl">
           <div className="text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--accent)]">
@@ -344,7 +403,11 @@ function About() {
           </div>
           <div className="mt-12 space-y-0">
             {timeline.map((item, i) => (
-              <div key={i} className="relative flex gap-6 pb-10 last:pb-0">
+              <motion.div
+                key={i}
+                variants={itemVariants}
+                className="relative flex gap-6 pb-10 last:pb-0"
+              >
                 {/* vertical line */}
                 <div className="flex flex-col items-center">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[color:var(--primary)] text-xs font-bold text-[color:var(--on-primary)]">
@@ -362,15 +425,18 @@ function About() {
                     {item.event}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* CTA */}
       <section className="px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-[32px] bg-[color:var(--primary)] px-6 py-16 text-center text-[color:var(--on-primary)] shadow-xl sm:px-12 lg:py-20">
+        <motion.div
+          whileHover={{ scale: 1.01 }}
+          className="mx-auto max-w-6xl overflow-hidden rounded-[32px] bg-[color:var(--primary)] px-6 py-16 text-center text-[color:var(--on-primary)] shadow-xl sm:px-12 lg:py-20"
+        >
           <h2 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
             Be part of a more human internet.
           </h2>
@@ -394,7 +460,7 @@ function About() {
               Back to Home
             </Link>
           </div>
-        </div>
+        </motion.div>
       </section>
     </div>
   );

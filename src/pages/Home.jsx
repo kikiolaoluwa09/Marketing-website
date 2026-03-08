@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { AnimatePresence, animate, motion } from "framer-motion";
 import heroImage from "../assets/Chatscreen.png";
 // import onboardingImage from "../assets/Onboarding 3 (1).png";
 import  chatImage from "../assets/Chat.png";
@@ -153,83 +154,214 @@ const testimonials = [
 ];
 
 const stats = [
-  { value: "18K+", label: "Daily reflections" },
-  { value: "220K", label: "Care notes saved" },
-  { value: "1.2s", label: "Average response" },
-  { value: "99.9%", label: "Uptime" },
+  { value: 18, suffix: "K+", label: "Daily reflections", progress: 78 },
+  { value: 220, suffix: "K", label: "Care notes saved", progress: 86 },
+  { value: 1.2, suffix: "s", label: "Average response", progress: 64, decimals: 1 },
+  { value: 99.9, suffix: "%", label: "Uptime", progress: 99, decimals: 1 },
 ];
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 30 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+      staggerChildren: 0.12,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
+};
+
+function CountUp({ value, suffix = "", decimals = 0 }) {
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    const controls = animate(0, value, {
+      duration: 1.4,
+      ease: "easeOut",
+      onUpdate: (latest) => setDisplay(latest),
+    });
+
+    return () => controls.stop();
+  }, [value]);
+
+  return (
+    <span>
+      {display.toFixed(decimals)}
+      {suffix}
+    </span>
+  );
+}
 
 /* ---- Component ---- */
 function Home() {
+  const [heroLoaded, setHeroLoaded] = useState(false);
+  const [chatLoaded, setChatLoaded] = useState(false);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 4500);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const ringGeometry = useMemo(() => {
+    const radius = 26;
+    const circumference = 2 * Math.PI * radius;
+    return { radius, circumference };
+  }, []);
+
+  const prevTestimonial = () => {
+    setActiveTestimonial((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
+  };
+
+  const nextTestimonial = () => {
+    setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+  };
+
   return (
-    <div className="space-y-28 pb-8 pt-20">
+    <motion.div
+      className="relative space-y-28 overflow-hidden pb-8 pt-20"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
+    >
+      <div className="pointer-events-none absolute -left-24 top-24 h-64 w-64 rounded-full bg-[color:var(--accent)]/10 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 top-[32rem] h-80 w-80 rounded-full bg-[color:var(--primary)]/10 blur-3xl" />
+
       {/* HERO */}
-      <section className="px-4 sm:px-6 lg:px-8">
+      <motion.section
+        className="px-4 sm:px-6 lg:px-8"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.25 }}
+      >
         <div className="mx-auto max-w-6xl text-center">
-          <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-5 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-[color:var(--muted)]">
+          <motion.span variants={itemVariants} className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/50 bg-white/55 px-5 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-[color:var(--muted)] backdrop-blur-md">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><circle cx="12" cy="12" r="6" /></svg>
             Now onboarding early companions
-          </span>
+          </motion.span>
 
-          <h1 className="mx-auto mt-6 max-w-4xl text-balance text-5xl font-semibold leading-[1.1] tracking-tight text-[color:var(--text)] sm:text-6xl lg:text-7xl">
+          <motion.h1 variants={itemVariants} className="mx-auto mt-6 max-w-4xl text-balance text-5xl font-semibold leading-[1.1] tracking-tight text-[color:var(--text)] sm:text-6xl lg:text-7xl">
             A lighter way to{" "}
             <span className="text-[color:var(--primary)]">feel heard</span>
-          </h1>
+          </motion.h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-[color:var(--muted)] sm:text-lg">
+          <motion.p variants={itemVariants} className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-[color:var(--muted)] sm:text-lg">
             CuraAi is your emotionally aware AI companion — designed to listen
             with care, respond with empathy, and respect your privacy at every
             step.
-          </p>
+          </motion.p>
 
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <Link
+          <motion.div variants={itemVariants} className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <motion.div whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link
               to="/pricing"
               className="inline-flex items-center gap-2 rounded-2xl bg-[color:var(--primary)] px-7 py-3.5 text-sm font-semibold text-[color:var(--on-primary)] shadow-md transition hover:-translate-y-0.5 hover:shadow-xl"
             >
               Join the Waitlist
               <ArrowRightIcon />
             </Link>
-            <a
+            </motion.div>
+            <motion.div whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <a
               href="#features"
               className="inline-flex items-center gap-2 rounded-2xl border border-[color:var(--border)] px-7 py-3.5 text-sm font-semibold text-[color:var(--text)] transition hover:bg-[color:var(--surface)]"
             >
               See how it works
             </a>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
 
         {/* Hero Image */}
-        <div className="mx-auto mt-16 max-w-5xl flex justify-center gap-10">
-     
-            <img
+        <motion.div variants={itemVariants} className="mx-auto mt-16 flex max-w-5xl justify-center gap-10">
+          <div className="relative min-h-[220px] min-w-[240px]">
+            {!heroLoaded && <div className="absolute inset-0 animate-pulse rounded-2xl bg-[color:var(--surface-2)]" />}
+            <motion.img
               src={heroImage}
               alt="CuraAi chat interface"
-              className="h-[100%] w-auto rounded-2xl object-cover"
+              onLoad={() => setHeroLoaded(true)}
+              className={`h-[100%] w-auto rounded-2xl object-cover shadow-xl transition-opacity duration-500 ${heroLoaded ? "opacity-100" : "opacity-0"}`}
+              whileHover={{ rotate: -1.2, y: -3 }}
             />
-            
-            <img
+          </div>
+
+          <div className="relative hidden min-h-[220px] min-w-[240px] md:block">
+            {!chatLoaded && <div className="absolute inset-0 animate-pulse rounded-2xl bg-[color:var(--surface-2)]" />}
+            <motion.img
               src={chatImage}
               alt="CuraAi chat interface"
-              className="hidden md:block h-[100%] w-auto rounded-2xl object-cover"
+              onLoad={() => setChatLoaded(true)}
+              className={`h-[100%] w-auto rounded-2xl object-cover shadow-xl transition-opacity duration-500 ${chatLoaded ? "opacity-100" : "opacity-0"}`}
+              whileHover={{ rotate: 1.2, y: -3 }}
             />
-            
-
-        </div>
+          </div>
+        </motion.div>
 
         {/* Stats strip */}
         <div className="mx-auto mt-12 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4">
-          {stats.map((s) => (
-            <div key={s.label} className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-5 text-center transition hover:shadow-md">
-              <p className="text-2xl font-semibold text-[color:var(--text)] sm:text-3xl">{s.value}</p>
+          {stats.map((s, i) => {
+            const progressOffset = ringGeometry.circumference - (s.progress / 100) * ringGeometry.circumference;
+
+            return (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.35 }}
+                transition={{ delay: i * 0.09, duration: 0.45, ease: "easeOut" }}
+                whileHover={{ y: -4, rotateX: 3, scale: 1.02 }}
+                className="rounded-2xl border border-white/55 bg-white/65 p-5 text-center shadow-sm backdrop-blur-md"
+              >
+                <div className="relative mx-auto mb-3 h-14 w-14">
+                  <svg className="h-14 w-14 -rotate-90" viewBox="0 0 60 60" aria-hidden="true">
+                    <circle cx="30" cy="30" r={ringGeometry.radius} stroke="currentColor" strokeWidth="5" className="text-[color:var(--border)]" fill="transparent" />
+                    <motion.circle
+                      cx="30"
+                      cy="30"
+                      r={ringGeometry.radius}
+                      stroke="currentColor"
+                      strokeWidth="5"
+                      className="text-[color:var(--primary)]"
+                      fill="transparent"
+                      strokeDasharray={ringGeometry.circumference}
+                      initial={{ strokeDashoffset: ringGeometry.circumference }}
+                      whileInView={{ strokeDashoffset: progressOffset }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 1.2, delay: i * 0.1, ease: "easeOut" }}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </div>
+                <p className="text-2xl font-semibold text-[color:var(--text)] sm:text-3xl">
+                  <CountUp value={s.value} suffix={s.suffix} decimals={s.decimals || 0} />
+                </p>
               <p className="mt-1 text-xs font-medium uppercase tracking-wide text-[color:var(--muted)]">{s.label}</p>
-            </div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
-      </section>
+      </motion.section>
 
       {/* FEATURES (alternating like TrediBooks) */}
-      <section id="features" className="px-4 sm:px-6 lg:px-8x">
+      <motion.section
+        id="features"
+        className="px-4 sm:px-6 lg:px-8"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="mx-auto max-w-6xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--accent)]">Core Features</p>
           <h2 className="mx-auto max-w-3xl text-balance text-3xl font-semibold tracking-tight text-[color:var(--text)] sm:text-4xl lg:text-5xl">
@@ -239,28 +371,35 @@ function Home() {
 
         <div className="mx-auto mt-16 max-w-6xl space-y-20">
           {features.map((feat, i) => (
-            <div
+            <motion.div
               key={feat.title}
+              variants={itemVariants}
               className={`flex flex-col items-center lg:flex-row py-0 ${
                 i % 2 !== 0 ? "lg:flex-row-reverse" : ""
               }`}
             >
-              <div className="flex-1 space-y-5 lg:max-w-md p-5 border border-(--border) rounded-lg bg-(--surface) transition hover:drop-shadow-2xl"> 
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[c4olor:var(--surface-2)] text-[color:var(--primary)]">
+              <motion.div
+                whileHover={{ y: -6, rotate: -0.4, scale: 1.01 }}
+                transition={{ type: "spring", stiffness: 220, damping: 18 }}
+                className="group flex-1 space-y-5 rounded-2xl border border-white/60 bg-white/65 p-6 shadow-sm backdrop-blur-md lg:max-w-md"
+              >
+                <motion.div
+                  className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--surface-2)] text-[color:var(--primary)]"
+                  whileHover={{ scale: 1.1, rotate: 8 }}
+                >
                   {feat.icon}
-                </div>
+                </motion.div>
                 <h3 className="text-2xl font-semibold tracking-tight text-[color:var(--text)]">
                   {feat.title}
                 </h3>
                 <p className="text-base leading-relaxed text-[color:var(--muted)]">
                   {feat.description}
                 </p>
-              </div>
-
-            </div>
+              </motion.div>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* WHY CURAAI */}
       <section className="px-4 sm:px-6 lg:px-8">
@@ -273,21 +412,29 @@ function Home() {
           </div>
 
           <div className="mt-14 grid gap-6 sm:grid-cols-2">
-            {whyCuraAi.map((item) => (
-              <article
+            {whyCuraAi.map((item, i) => (
+              <motion.article
                 key={item.title}
-                className="group rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-7 transition hover:-translate-y-1 hover:shadow-lg"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.45, delay: i * 0.08, ease: "easeOut" }}
+                whileHover={{ y: -6, scale: 1.01 }}
+                className="group rounded-3xl border border-white/55 bg-white/65 p-7 shadow-sm backdrop-blur-md"
               >
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--surface-2)] text-[color:var(--primary)] transition group-hover:bg-[color:var(--primary)] group-hover:text-[color:var(--on-primary)]">
+                <motion.div
+                  className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--surface-2)] text-[color:var(--primary)] transition group-hover:bg-[color:var(--primary)] group-hover:text-[color:var(--on-primary)]"
+                  whileHover={{ rotate: 10, scale: 1.1 }}
+                >
                   {item.icon}
-                </div>
+                </motion.div>
                 <h3 className="text-lg font-semibold tracking-tight text-[color:var(--text)]">
                   {item.title}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">
                   {item.description}
                 </p>
-              </article>
+              </motion.article>
             ))}
           </div>
         </div>
@@ -331,11 +478,70 @@ function Home() {
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-6 lg:grid-cols-3">
-            {testimonials.map((t) => (
-              <blockquote
+          <div className="mt-12 lg:hidden">
+            <div className="relative overflow-hidden rounded-3xl border border-white/55 bg-white/70 p-7 shadow-sm backdrop-blur-md">
+              <AnimatePresence mode="wait">
+                <motion.blockquote
+                  key={testimonials[activeTestimonial].author}
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -24 }}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                >
+                  <QuoteIcon />
+                  <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">
+                    &ldquo;{testimonials[activeTestimonial].quote}&rdquo;
+                  </p>
+                  <div className="mt-6 flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--primary)] text-sm font-bold text-[color:var(--on-primary)]">
+                      {testimonials[activeTestimonial].author.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-[color:var(--text)]">{testimonials[activeTestimonial].author}</p>
+                      <p className="text-xs text-[color:var(--muted)]">{testimonials[activeTestimonial].role}</p>
+                    </div>
+                  </div>
+                </motion.blockquote>
+              </AnimatePresence>
+              <div className="mt-6 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {testimonials.map((t, i) => (
+                    <button
+                      key={t.author}
+                      onClick={() => setActiveTestimonial(i)}
+                      aria-label={`Show testimonial ${i + 1}`}
+                      className={`h-2.5 rounded-full transition-all ${activeTestimonial === i ? "w-7 bg-[color:var(--primary)]" : "w-2.5 bg-[color:var(--border)]"}`}
+                    />
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={prevTestimonial}
+                    className="rounded-xl border border-[color:var(--border)] px-3 py-1.5 text-xs font-semibold text-[color:var(--text)] transition hover:bg-[color:var(--surface-2)]"
+                  >
+                    Prev
+                  </button>
+                  <button
+                    onClick={nextTestimonial}
+                    className="rounded-xl border border-[color:var(--border)] px-3 py-1.5 text-xs font-semibold text-[color:var(--text)] transition hover:bg-[color:var(--surface-2)]"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-12 hidden gap-6 lg:grid lg:grid-cols-3">
+            {testimonials.map((t, i) => (
+              <motion.blockquote
                 key={t.author}
-                className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-7 transition hover:-translate-y-1 hover:shadow-lg"
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.4, delay: i * 0.08, ease: "easeOut" }}
+                whileHover={{ y: -6, scale: 1.01 }}
+                className="rounded-3xl border border-white/55 bg-white/70 p-7 shadow-sm backdrop-blur-md"
               >
                 <QuoteIcon />
                 <p className="mt-2 text-sm leading-relaxed text-[color:var(--muted)]">
@@ -350,7 +556,7 @@ function Home() {
                     <p className="text-xs text-[color:var(--muted)]">{t.role}</p>
                   </div>
                 </div>
-              </blockquote>
+              </motion.blockquote>
             ))}
           </div>
         </div>
@@ -358,7 +564,10 @@ function Home() {
 
       {/* FINAL CTA */}
       <section className="px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-2xl bg-(--primary) px-6 py-16 text-center text-(--on-primary) shadow-xl sm:px-12 lg:py-20">
+        <motion.div
+          whileHover={{ scale: 1.01 }}
+          className="mx-auto max-w-6xl overflow-hidden rounded-2xl bg-[color:var(--primary)] px-6 py-16 text-center text-[color:var(--on-primary)] shadow-xl sm:px-12 lg:py-20"
+        >
           <h2 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
             Take care of your wellbeing today.
           </h2>
@@ -380,9 +589,9 @@ function Home() {
               Learn More
             </Link>
           </div>
-        </div>
+        </motion.div>
       </section>
-    </div>
+    </motion.div>
   );
 }
 

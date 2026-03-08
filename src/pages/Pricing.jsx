@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const CheckIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -147,8 +148,28 @@ function Pricing() {
 
   const toggleFaq = (i) => setOpenFaq(openFaq === i ? null : i);
 
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 24 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 16 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+  };
+
   return (
-    <div className="space-y-16 pb-8 pt-20">
+    <div className="relative space-y-16 pb-8 pt-20">
+      <div className="pointer-events-none absolute -left-20 top-24 h-72 w-72 rounded-full bg-[color:var(--accent)]/8 blur-3xl" />
+      <div className="pointer-events-none absolute -right-28 top-[40rem] h-80 w-80 rounded-full bg-[color:var(--primary)]/8 blur-3xl" />
       
       <section className="px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
@@ -198,13 +219,18 @@ function Pricing() {
         <div className="mx-auto max-w-6xl">
           {/* Mobile: Horizontal Scroll with Peek | Desktop: Grid */}
           <div className="flex gap-4 overflow-x-auto px-4 pb-4 snap-x snap-mandatory scrollbar-hide sm:px-6 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 lg:snap-none lg:gap-6">
-            {tiers.map((tier) => (
-              <article
+            {tiers.map((tier, i) => (
+              <motion.article
                 key={tier.name}
-                className={`relative flex min-w-[80vw] flex-col rounded-3xl border bg-[color:var(--surface)] p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-lg snap-center sm:min-w-[65vw] lg:min-w-0 ${
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.1, ease: "easeOut" }}
+                whileHover={{ y: -8, scale: 1.01 }}
+                className={`relative flex min-w-[80vw] flex-col rounded-3xl border bg-white/65 p-7 shadow-sm backdrop-blur-md snap-center sm:min-w-[65vw] lg:min-w-0 ${
                   tier.highlight
                     ? "border-[color:var(--primary)] ring-2 ring-[color:var(--primary)]"
-                    : "border-[color:var(--border)]"
+                    : "border-white/50"
                 }`}
               >
               {tier.highlight && (
@@ -214,9 +240,12 @@ function Pricing() {
               )}
 
               <div className="mb-4 flex items-center gap-3">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--surface-2)] text-[color:var(--primary)]">
+                <motion.div
+                  whileHover={{ rotate: 10, scale: 1.1 }}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--surface-2)] text-[color:var(--primary)]"
+                >
                   {tier.icon}
-                </div>
+                </motion.div>
                 <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
                   {tier.name}
                 </p>
@@ -244,7 +273,9 @@ function Pricing() {
                 ))}
               </ul>
 
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 className={`mt-8 w-full rounded-2xl px-4 py-3.5 text-sm font-semibold transition ${
                   tier.highlight
                     ? "bg-[color:var(--primary)] text-[color:var(--on-primary)] shadow-md hover:shadow-lg"
@@ -252,15 +283,21 @@ function Pricing() {
                 }`}
               >
                 {tier.cta}
-              </button>
-            </article>
+              </motion.button>
+            </motion.article>
           ))}
           </div>
         </div>
       </section>
 
       {/* FAQs */}
-      <section className="px-4 sm:px-6 lg:px-8">
+      <motion.section
+        className="px-4 sm:px-6 lg:px-8"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="mx-auto max-w-3xl">
           <div className="text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--accent)]">FAQ</p>
@@ -271,9 +308,11 @@ function Pricing() {
 
           <div className="mt-12 space-y-3">
             {faqs.map((faq, i) => (
-              <div
+              <motion.div
                 key={i}
-                className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] transition"
+                variants={itemVariants}
+                whileHover={{ x: 4 }}
+                className="rounded-2xl border border-white/50 bg-white/65 shadow-sm backdrop-blur-md"
               >
                 <button
                   onClick={() => toggleFaq(i)}
@@ -297,15 +336,18 @@ function Pricing() {
                     </p>
                   </div>
                 )}
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* CTA */}
       <section className="px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-[32px] bg-[color:var(--primary)] px-6 py-16 text-center text-[color:var(--on-primary)] shadow-xl sm:px-12 lg:py-20">
+        <motion.div
+          whileHover={{ scale: 1.01 }}
+          className="mx-auto max-w-6xl overflow-hidden rounded-[32px] bg-[color:var(--primary)] px-6 py-16 text-center text-[color:var(--on-primary)] shadow-xl sm:px-12 lg:py-20"
+        >
           <h2 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
             Ready to feel supported?
           </h2>
@@ -327,7 +369,7 @@ function Pricing() {
               Learn About Us
             </Link>
           </div>
-        </div>
+        </motion.div>
       </section>
     </div>
   );
